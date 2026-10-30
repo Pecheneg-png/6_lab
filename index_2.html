@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D-презентация проекта</title>
+
+  <!-- Подключение скрипта model-viewer из задания -->
+  <script type="module" src="assets/model-viewer.min.js"></script>
+
+  <style>
+    /* Базовые стили для красивого отображения */
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9; /* Настройка фона (Шаг 4) */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      color: #666;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    /* Настройка размеров области просмотра (Шаг 4) */
+    model-viewer {
+      width: 100%;
+      max-width: 800px;
+      height: 500px;
+      background-color: #293133;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Стили для пульта управления анимациями (Шаг 4) */
+    .controls-panel {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      background: #ffffff;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+    button, select {
+      padding: 10px 16px;
+      font-size: 15px;
+      font-family: inherit;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    button:hover {
+      background-color: #f0f0f0;
+    }
+    #play-btn {
+      background-color: #4CAF50;
+      color: white;
+      border-color: #4CAF50;
+    }
+    #play-btn:hover {
+      background-color: #45a049;
+    }
+    #pause-btn {
+      background-color: #f44336;
+      color: white;
+      border-color: #f44336;
+    }
+    #pause-btn:hover {
+      background-color: #da190b;
+    }
+    select {
+      min-width: 150px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='10px' height='10px'><path d='M0 0l5 5 5-5z' fill='%23666'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+      appearance: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Заголовок и описание (Шаг 4) -->
+  <h1>Интерактивная 3D-модель</h1>
+  <p>Используйте мышь для вращения и колесико для масштабирования объекта.<br>Управляйте воспроизведением анимаций с помощью панели ниже.</p>
+
+  <!-- Основной веб-компонент для отображения 3D -->
+  <model-viewer 
+id="robot-viewer"
+    src="assets/rust in _Gears_7.glb" 
+    alt="Моя 3D модель" 
+    camera-controls 
+    auto-rotate
+    ar
+    ar-scale="fixed"
+    scale="1 1 1"
+    shadow-intensity="1"
+    shadow-softness="0"
+    exposure="0.5"
+    autoplay
+    animation-name="walk"
+    bounds="tight"
+    camera-target="auto auto auto"
+    camera-orbit="0deg 75deg auto"
+    min-camera-orbit="auto auto 2m"
+    max-camera-orbit="auto auto 15m"
+    interaction-prompt="none">
+  </model-viewer>
+
+  <!-- Пульт управления для Шага 4 лабораторной -->
+  <div class="controls-panel">
+    <div class="btn-group">
+      <button id="play-btn">Запустить</button>
+      <button id="pause-btn">Остановить</button>
+    </div>
+    
+    <div>
+      <label for="animation-select">Выбрать движение: </label>
+      <select id="animation-select">
+        <option value="walk" selected>Ходьба (walk)</option>
+        <option value="idle">Ожидание (idle)</option>
+        <option value="jump">Прыжок (jump)</option>
+        <option value="run">Бег (run)</option>
+        <option value="shift">Сдвиг (shift)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Логика управления веб-компонентом -->
+  <script>
+    const viewer = document.getElementById('robot-viewer');
+    const playBtn = document.getElementById('play-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const animSelect = document.getElementById('animation-select');
+
+    // Кнопка Запустить
+    playBtn.addEventListener('click', () => {
+      viewer.play();
+    });
+
+    // Кнопка Остановить
+    pauseBtn.addEventListener('click', () => {
+      viewer.pause();
+    });
+
+    // Смена анимации через выпадающий список
+    animSelect.addEventListener('change', (event) => {
+      const selectedAnim = event.target.value;
+      
+      // Меняем текущую анимацию в компоненте
+      viewer.animationName = selectedAnim;
+      
+      // Автоматически запускаем её после переключения
+      viewer.play();
+    });
+  </script>
+
+</body>
+</html>
